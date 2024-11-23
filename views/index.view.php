@@ -1,9 +1,16 @@
+<?php
+/**
+ * @var $livros array<Livro>
+ */
+?>
+
 <form class="w-full flex space-x-2 mt-6">
     <input
         type="text"
         class="border-stone-800 border-2 rounded-md bg-stone-900 text-sm focus:outline-none px-2 py-1 w-full"
         placeholder="Pesquisar..."
-        name="pesquisar"
+        name="pesquisa"
+        value="<?php echo data_get('pesquisa', $_REQUEST) ?>"
     />
     <button type="submit">🔍</button>
 </form>
@@ -14,18 +21,18 @@
                 <div class="w-1/3">imagem</div>
                 <div>
                     <div class="font-semibold">
-                        <a href="<?php echo 'livro?id='.$livro['id'] ?>" class="hover:underline">
-                            <?php echo $livro['title']; ?>
+                        <a href="<?php echo 'livro?id='.$livro->id ?>" class="hover:underline">
+                            <?php echo $livro->titulo; ?>
                         </a>
                     </div>
                     <div class="text-xs italic">
-                        <?php echo $livro['author']; ?>
+                        <?php echo $livro->autor; ?>
                     </div>
                     <div class="text-xs italic">🌟🌟🌟🌟🌟</div>
                 </div>
             </div>
             <div class="text-sm">
-                <?php echo $livro['description']; ?>
+                <?php echo $livro->descricao; ?>
             </div>
         </div>
     <?php endforeach; ?>

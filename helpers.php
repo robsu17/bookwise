@@ -21,3 +21,13 @@ function abort($code) {
     require 'views/template/error.php';
     die();
 }
+
+function data_get($key, $array) {
+    $arrayKeyExist = array_key_exists($key, $array);
+
+    if ($arrayKeyExist) {
+        return $array[$key];
+    }
+
+    return null;
+}
