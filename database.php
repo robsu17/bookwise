@@ -1,37 +1,29 @@
 <?php
 
-class DB {
+/**
+ * @var array $config
+ */
 
+class DB {
     private PDO $db;
 
-    public function __construct() {
-        $this->db = new PDO('sqlite:database.sqlite');
+    public function __construct($config) {
+
+        $connectionString = $config['driver']. ":" .$config['database'];
+        $this->db = new PDO($connectionString);
     }
 
-    /**
-     * @param $pesquisa
-     * @return array<Livro>
-     */
-    public function livros($pesquisa = ''): array
+    public function query($query, $class = null, $params = []): false|PDOStatement
     {
-        $prepare = $this->db->prepare("SELECT * FROM livros WHERE titulo like :titulo");
-        $prepare->bindValue(':titulo', "%$pesquisa%");
-        $prepare->execute();
+        $prepare = $this->db->prepare($query);
 
-        return $prepare->fetchAll(PDO::FETCH_CLASS, Livro::class);
-    }
+        if ($class)
+            $prepare->setFetchMode(PDO::FETCH_CLASS, $class);
 
-    /**
-     * @param $id
-     * @return Livro
-     */
-    public function livroPorId($id): Livro
-    {
-        $prepare = $this->db->prepare('SELECT * FROM livros WHERE id = :id');
-        $prepare->bindValue(':id', $id);
-        $prepare->setFetchMode(PDO::FETCH_CLASS, Livro::class);
-        $prepare->execute();
+        $prepare->execute($params);
 
-        return $prepare->fetch();
+        return $prepare;
     }
 }
+
+$DB = new DB($config['database']['sqlite']);

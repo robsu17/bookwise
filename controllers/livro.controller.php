@@ -1,7 +1,14 @@
 <?php
 
-$id = $_REQUEST["id"];
+/**
+ * @var DB $DB
+ */
 
-$livro = (new DB)->livroPorId($id);
+$livro = $DB
+    ->query(
+        "SELECT * FROM livros WHERE id = :id",
+        Livro::class,
+        ['id' => $_REQUEST["id"]]
+    )->fetch();
 
 view("livro", compact('livro'));
