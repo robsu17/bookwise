@@ -1,16 +1,11 @@
 <?php
 
-/**
- * @var array $config
- */
-
 class DB {
     private PDO $db;
 
-    public function __construct($config) {
-
-        $connectionString = $config['driver']. ":" .$config['database'];
-        $this->db = new PDO($connectionString);
+    public function __construct($config)
+    {
+        $this->db = new PDO($this->getDsn($config));
     }
 
     public function query($query, $class = null, $params = []): false|PDOStatement
@@ -24,6 +19,18 @@ class DB {
 
         return $prepare;
     }
+
+    private function getDsn($config): string
+    {
+        $driver = $config['driver'];
+        unset($config['driver']);
+
+        return match ($driver) {
+            'sqlite' => $driver. ":" .$config['database'],
+            default => $driver .':'. http_build_query($config, '', ';')
+        };
+    }
 }
 
-$DB = new DB($config['database']['sqlite']);
+/*** @var array $config */
+$DB = new DB($config['database']['mysql']);
